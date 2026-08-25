@@ -1,0 +1,4 @@
+export const DEFAULT_AGE_OF_SPELLS_PVP_CONTRACT_ADDRESS =
+  "0xBfcCd5b915D674249A6C3Ef6D93aba66ABdA6E04" as const;
+
+export const ADDRESS_PATTERN = /^0x[0-9a-fA-F]{40}$/;

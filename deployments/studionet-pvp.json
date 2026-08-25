@@ -1,0 +1,118 @@
+{
+  "schema": "ageofspells/studionet-pvp-deployment/v4",
+  "product": "Age of Spells",
+  "contract": "AgeOfSpellsPvP",
+  "architecture": "intelligent-transmutation-v3",
+  "network": "GenLayer Studionet",
+  "chain_id": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "status": "FINALIZED",
+  "verified_at_utc": "2026-08-19T11:47:43.8695034Z",
+  "release_audited_at_utc": "2026-08-21T13:40:27.8548759Z",
+  "deployer_address": "0x91b1b2d1f2de66400fcbeaebadb8a5330eb28dc0",
+  "contract_address": "0xBfcCd5b915D674249A6C3Ef6D93aba66ABdA6E04",
+  "source_sha256": "E6331A17A3F9F9B5367123CC967A2063D1DA6E4356C0FA617F410B4826ABE77D",
+  "source_bytes": 41015,
+  "runner": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
+  "explorer_contract": "https://explorer-studio.genlayer.com/address/0xBfcCd5b915D674249A6C3Ef6D93aba66ABdA6E04",
+  "deployment": {
+    "transaction_hash": "0x26b83cd373edb8442586f26adb592ef53299197b7316d0c00eecc747d9a4595b",
+    "explorer": "https://explorer-studio.genlayer.com/tx/0x26b83cd373edb8442586f26adb592ef53299197b7316d0c00eecc747d9a4595b",
+    "created_at": "2026-08-19T11:16:55.133481+00:00",
+    "status": "FINALIZED",
+    "consensus": "MAJORITY_AGREE",
+    "leader_execution": "SUCCESS",
+    "rounds": 1
+  },
+  "deployed_state_read": {
+    "architecture": "intelligent-transmutation-v3",
+    "win_xp": 10,
+    "starting_hand": 12,
+    "minimum_fusion_cards": 2,
+    "maximum_fusion_cards": 3,
+    "single_card_casting": false,
+    "standard_pack_size": 2,
+    "arcane_pack_size": 3,
+    "total_matches": 0,
+    "total_fusions": 0
+  },
+  "battle_audit": {
+    "audited_contract": "0x3d3DCcc0fCEd3f9BC9f284e0211e2813cB223485",
+    "accepted_fusions": 4,
+    "undetermined_transactions": [
+      {
+        "transaction_hash": "0x2ce0fae7321f079a758a1bb269151adac4a644db9a96c8c20bc5472023bab6cf",
+        "ingredients": ["air", "air", "earth"],
+        "incantation": "i compress air and rock into high speed projectiles while flying around",
+        "result": "MAJORITY_DISAGREE",
+        "root_cause": "validators required identical creative element and effect labels"
+      },
+      {
+        "transaction_hash": "0x6567dff96888c67c15983b26c0ab46bcf94f8f9fabc647aa8c17ac3ea06e60e9",
+        "ingredients": ["air", "air", "earth"],
+        "incantation": "i levitate into the air and compress air and rock into high speed bullets",
+        "result": "MAJORITY_DISAGREE",
+        "root_cause": "AI-generated description exceeded a presentation-only length limit"
+      }
+    ]
+  },
+  "hosted_integration_test": {
+    "status": "PASSED",
+    "duration_seconds": 68.27,
+    "fresh_contract_address": "0x52Eb0bE2cf85EbF7D432E1FB6ffA93AFF5157776F",
+    "regression_incantation": "i compress air and rock into high speed projectiles while flying around",
+    "resolved_spell": {
+      "name": "Eolian Shard Storm",
+      "fusion": "Sandstorm",
+      "primary_effect": "damage"
+    },
+    "assertions": [
+      "deployment, create, join, and forge writes executed successfully",
+      "the exact previously undetermined incantation finalized through validator consensus",
+      "three selected ingredients were burned",
+      "the deterministic grand template resolved bounded offensive power",
+      "the same generated spell appears in both wallet views and history"
+    ]
+  },
+  "web_deployment": {
+    "provider": "Vercel",
+    "project": "age-of-spells",
+    "project_id": "prj_gEoDngM18rbI1bhGLa3kdBdIr9eL",
+    "deployment_id": "dpl_GrniYPEdBtdBbZgLcyEq726qvKAi",
+    "deployment_url": "https://age-of-spells-gofop787h-leokings588-5902s-projects.vercel.app",
+    "target": "production",
+    "status": "READY",
+    "url": "https://age-of-spells.vercel.app",
+    "http_status": 200,
+    "production_asset_checks": {
+      "new_brand_present": true,
+      "new_contract_present": true,
+      "old_brand_absent": true,
+      "old_contract_absent": true,
+      "privy_configuration_present": true,
+      "production_build_variables_persisted": true,
+      "wallet_modal_opens": true,
+      "leaderboard_api_status": 200,
+      "leaderboard_cache_hit": true,
+      "finalized_winner_visible": true,
+      "finalized_winner_xp": 10,
+      "all_public_routes_status": 200,
+      "elemental_hero_asset_status": 200,
+      "card_sigil_asset_status": 200,
+      "desktop_horizontal_overflow": false,
+      "mobile_horizontal_overflow": false,
+      "wcag_a_aa_automated_violations": 0,
+      "browser_console_errors": 0,
+      "browser_page_errors": 0,
+      "runtime_errors_last_hour": 0
+    }
+  },
+  "local_verification": {
+    "contract_lint": "PASSED",
+    "contract_typecheck": "PASSED",
+    "direct_tests": "12 PASSED",
+    "frontend_unit_tests": "PASSED",
+    "typescript": "PASSED",
+    "production_build": "PASSED"
+  }
+}

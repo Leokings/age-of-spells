@@ -1,0 +1,17 @@
+.env*
+!.env.example
+.artifacts/
+artifacts/
+.venv/
+.pytest_cache/
+node_modules/
+dist/
+abi/
+contracts/
+deployments/
+tests/
+*.pyc
+requirements-dev.txt
+gltest.config.yaml
+ARCHITECTURE.md
+GAME_ARCHITECTURE.md

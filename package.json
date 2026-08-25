@@ -1,0 +1,54 @@
+{
+  "name": "age-of-spells",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:functions && tsc --noEmit && vite build",
+    "build:functions": "esbuild server/leaderboard.ts --bundle --platform=node --format=esm --target=node24 --outfile=api/leaderboard.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:wallet && npm run test:rpc && npm run test:pvp && npm run test:reconciliation && npm run test:leaderboard",
+    "test:wallet": "esbuild tests/unit/wallet-network.test.ts --bundle --platform=node --format=esm --outfile=node_modules/.cache/age-of-spells/wallet-network.test.mjs && node node_modules/.cache/age-of-spells/wallet-network.test.mjs",
+    "test:rpc": "esbuild tests/unit/rpc-retry.test.ts --bundle --platform=node --format=esm --outfile=node_modules/.cache/age-of-spells/rpc-retry.test.mjs && node node_modules/.cache/age-of-spells/rpc-retry.test.mjs",
+    "test:pvp": "esbuild tests/unit/pvp-model.test.ts --bundle --platform=node --format=esm --outfile=node_modules/.cache/age-of-spells/pvp-model.test.mjs && node node_modules/.cache/age-of-spells/pvp-model.test.mjs",
+    "test:reconciliation": "esbuild tests/unit/transaction-reconciliation.test.ts --bundle --platform=node --format=esm --outfile=node_modules/.cache/age-of-spells/transaction-reconciliation.test.mjs && node node_modules/.cache/age-of-spells/transaction-reconciliation.test.mjs",
+    "test:leaderboard": "esbuild tests/unit/leaderboard-ranking.test.ts --bundle --platform=node --format=esm --outfile=node_modules/.cache/age-of-spells/leaderboard-ranking.test.mjs && node node_modules/.cache/age-of-spells/leaderboard-ranking.test.mjs",
+    "test:contract": ".venv\\Scripts\\pytest.exe tests/direct -q",
+    "test:integration:pvp": ".venv\\Scripts\\gltest.exe tests/integration/test_studionet_pvp.py -v -s --network studionet",
+    "lint:contract": ".venv\\Scripts\\genvm-lint.exe check contracts/age_of_spells_pvp.py --json",
+    "typecheck:contract": "set \"PATH=%CD%\\.venv\\Scripts;%PATH%\" && .venv\\Scripts\\genvm-lint.exe typecheck contracts/age_of_spells_pvp.py --json",
+    "schema:pvp": ".venv\\Scripts\\genvm-lint.exe schema contracts/age_of_spells_pvp.py --output abi/age_of_spells_pvp.json",
+    "verify": "npm run lint:contract && npm run typecheck:contract && npm run test:contract && npm run test && npm run build",
+    "network:studionet": "genlayer network set studionet",
+    "account": "genlayer account show",
+    "deploy:studionet": "genlayer deploy --contract contracts/age_of_spells_pvp.py"
+  },
+  "dependencies": {
+    "@privy-io/react-auth": "3.37.1",
+    "genlayer-js": "1.1.8",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "viem": "2.55.17"
+  },
+  "devDependencies": {
+    "@solana-program/memo": "0.8.0",
+    "@solana-program/system": "0.8.0",
+    "@solana-program/token": "0.6.0",
+    "@solana/kit": "3.0.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "esbuild": "0.28.2",
+    "genlayer": "0.39.2",
+    "typescript": "7.0.2",
+    "vite": "7.3.6"
+  },
+  "overrides": {
+    "axios": "1.19.0",
+    "ws@^8.0.0": "8.21.3"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}

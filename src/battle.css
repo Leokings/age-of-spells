@@ -1,0 +1,784 @@
+.aos-game-shell {
+  --aos-ink: #080a0d;
+  --aos-panel: rgba(13, 17, 22, 0.92);
+  --aos-border: rgba(236, 191, 104, 0.18);
+  --aos-gold: #efbd63;
+  --aos-copy: #f7f0df;
+  --aos-muted: #8d959b;
+  width: min(1440px, calc(100% - 36px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 0 80px;
+  color: var(--aos-copy);
+}
+
+.aos-game-shell button { font: inherit; }
+
+.aos-game-nav {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--aos-border);
+}
+
+.aos-game-brand { display: flex; align-items: center; gap: 13px; }
+.aos-game-brand > span {
+  width: 38px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(239, 189, 99, 0.65);
+  color: var(--aos-gold);
+  font: 700 10px "Cinzel", serif;
+  transform: rotate(45deg);
+}
+.aos-game-brand div { display: grid; gap: 2px; }
+.aos-game-brand strong { font: 700 14px "Cinzel", serif; letter-spacing: .07em; }
+.aos-game-brand small { color: var(--aos-muted); font-size: 9px; text-transform: uppercase; letter-spacing: .12em; }
+
+.aos-match-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.025);
+  color: var(--aos-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+.aos-match-meta b { color: var(--aos-gold); font-weight: 700; }
+.aos-match-meta span + b, .aos-match-meta b + span { border-left: 1px solid rgba(255,255,255,.08); padding-left: 14px; }
+
+.aos-battle-header {
+  min-height: 245px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 46px 4% 34px;
+}
+.aos-battle-header p, .aos-hand-heading p {
+  margin: 0 0 11px;
+  color: var(--aos-gold);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .22em;
+}
+.aos-battle-header h1 {
+  margin: 0;
+  font: 600 clamp(38px, 5vw, 67px)/1.02 "Cinzel", serif;
+  letter-spacing: -.035em;
+}
+.aos-turn-token {
+  width: 130px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  border: 1px solid var(--aos-border);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(239,189,99,.09), transparent 66%);
+  box-shadow: 0 0 50px rgba(239,189,99,.06);
+}
+.aos-turn-token::before { content: ""; position: absolute; }
+.aos-turn-token span { color: var(--aos-muted); font-size: 8px; letter-spacing: .18em; }
+.aos-turn-token strong { color: var(--aos-gold); font: 600 35px "Cinzel", serif; }
+
+.aos-player-panel {
+  --element: #e9b44c;
+  position: relative;
+  min-width: 0;
+  padding: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.075);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--element) 8%, transparent), transparent 50%),
+    var(--aos-panel);
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, opacity .22s ease;
+}
+.aos-player-panel::after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  right: -58px;
+  top: -62px;
+  border: 1px solid color-mix(in srgb, var(--element) 25%, transparent);
+  transform: rotate(45deg);
+}
+.aos-player-panel.targetable { cursor: crosshair; border-color: color-mix(in srgb, var(--element) 62%, transparent); animation: target-pulse 1.35s ease-in-out infinite; }
+.aos-player-panel.targetable:hover, .aos-player-panel.targetable:focus-visible { transform: translateY(-5px); outline: 0; box-shadow: 0 14px 40px color-mix(in srgb, var(--element) 16%, transparent); }
+.aos-player-panel.knocked-out { opacity: .45; filter: grayscale(.75); }
+
+.element-fire { --element: #ff6a3d; }
+.element-water { --element: #4cb9ff; }
+.element-air { --element: #cce9dd; }
+.element-earth { --element: #ba8a50; }
+.element-steam { --element: #a9c7d2; }
+.element-ice { --element: #78ddff; }
+.element-lightning { --element: #d8d16a; }
+.element-lava { --element: #ff432f; }
+.element-storm { --element: #7f9ee8; }
+.element-nature { --element: #79c46b; }
+.element-light { --element: #ffe69a; }
+.element-metal { --element: #aeb9c6; }
+.element-healing { --element: #68dc9a; }
+.element-shield { --element: #55a8ff; }
+.element-shadow { --element: #a77aff; }
+.element-mythic { --element: #f1c462; }
+.element-arcane { --element: #c28cff; }
+
+.aos-player-heading { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 11px; margin-bottom: 18px; }
+.aos-avatar {
+  width: 42px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--element) 45%, transparent);
+  border-radius: 50%;
+  color: var(--element);
+  background: color-mix(in srgb, var(--element) 8%, #101319);
+  font: 22px "Cinzel", serif;
+}
+.aos-player-heading span { display: block; margin-bottom: 3px; color: var(--aos-muted); font-size: 8px; text-transform: uppercase; letter-spacing: .12em; }
+.aos-player-heading h2 { margin: 0; font: 600 20px "Cinzel", serif; }
+.aos-player-heading b { color: color-mix(in srgb, var(--element) 84%, white); font-size: 7px; letter-spacing: .13em; }
+
+.aos-meter + .aos-meter { margin-top: 10px; }
+.aos-meter-copy { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--aos-muted); font-size: 8px; text-transform: uppercase; letter-spacing: .1em; }
+.aos-meter-copy strong { color: #dfe4df; font-weight: 600; }
+.aos-meter-track { height: 7px; overflow: hidden; background: rgba(255,255,255,.055); }
+.aos-meter-track i { display: block; width: var(--meter-fill); height: 100%; transition: width .65s cubic-bezier(.2,.85,.2,1); }
+.aos-meter.health .aos-meter-track i { background: linear-gradient(90deg, #bd3f32, #f1785f); box-shadow: 0 0 14px rgba(241,120,95,.3); }
+.aos-meter.shield .aos-meter-track i { background: linear-gradient(90deg, #2d74a8, #69c6f4); box-shadow: 0 0 14px rgba(105,198,244,.3); }
+.aos-last-spell { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 11px; border-top: 1px solid rgba(255,255,255,.055); font-size: 8px; text-transform: uppercase; letter-spacing: .08em; }
+.aos-last-spell span { color: var(--aos-muted); }
+.aos-last-spell strong { color: color-mix(in srgb, var(--element) 70%, white); font-weight: 600; }
+
+.aos-arena-layout { display: grid; grid-template-columns: 1fr 330px; gap: 12px; margin-top: 12px; }
+.aos-arena-stage {
+  min-height: 355px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.07);
+  background:
+    radial-gradient(circle at center, rgba(239,189,99,.085), transparent 28%),
+    linear-gradient(rgba(255,255,255,.013) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.013) 1px, transparent 1px),
+    rgba(8,11,14,.8);
+  background-size: auto, 34px 34px, 34px 34px, auto;
+}
+.aos-arena-stage::before, .aos-arena-stage::after { content: ""; position: absolute; inset: 24px; border: 1px solid rgba(239,189,99,.055); pointer-events: none; }
+.aos-arena-stage::after { inset: 52px; border-style: dashed; }
+.aos-rune-ring { position: absolute; width: 255px; aspect-ratio: 1; border: 1px solid rgba(239,189,99,.13); border-radius: 50%; animation: rune-spin 34s linear infinite; }
+.aos-rune-ring::before, .aos-rune-ring::after { content: ""; position: absolute; inset: 24px; border: 1px solid rgba(239,189,99,.08); transform: rotate(45deg); }
+.aos-rune-ring::after { inset: 62px; transform: rotate(22.5deg); }
+.aos-rune-ring i { position: absolute; width: 5px; aspect-ratio: 1; border-radius: 50%; background: var(--aos-gold); box-shadow: 0 0 13px var(--aos-gold); }
+.aos-rune-ring i:nth-child(1) { top: -3px; left: 50%; }
+.aos-rune-ring i:nth-child(2) { bottom: 28px; left: 18px; }
+.aos-rune-ring i:nth-child(3) { bottom: 28px; right: 18px; }
+.aos-arena-prompt { position: relative; z-index: 2; width: min(390px, 80%); text-align: center; }
+.aos-arena-prompt > span { color: var(--aos-gold); font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .2em; }
+.aos-arena-prompt h2 { margin: 8px 0 7px; font: 600 clamp(22px, 3vw, 36px) "Cinzel", serif; text-transform: capitalize; }
+.aos-arena-prompt p { margin: 0; color: var(--aos-muted); font-size: 12px; }
+.aos-arena-prompt small { display: block; margin-top: 18px; color: #70787d; font-size: 9px; }
+.aos-arena-prompt button {
+  margin-top: 18px;
+  padding: 11px 17px;
+  border: 1px solid rgba(239,189,99,.5);
+  background: rgba(239,189,99,.09);
+  color: #ffe3aa;
+  cursor: pointer;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+.aos-combat-log { min-width: 0; padding: 20px; border: 1px solid rgba(255,255,255,.07); background: var(--aos-panel); }
+.aos-log-heading { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,.065); }
+.aos-log-heading span { color: var(--aos-gold); font: 600 11px "Cinzel", serif; }
+.aos-log-heading button { padding: 4px 7px; border: 0; background: transparent; color: var(--aos-muted); cursor: pointer; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; }
+.aos-combat-log ol { list-style: none; margin: 0; padding: 0; }
+.aos-combat-log li { display: grid; grid-template-columns: 24px 1fr; gap: 8px; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.045); }
+.aos-combat-log li > span { color: #555d62; font: 600 9px "Cinzel", serif; }
+.aos-combat-log p { margin: 0; color: #b1b5b4; font-size: 10px; line-height: 1.55; }
+
+.aos-player-row { display: grid; grid-template-columns: 1fr 260px; gap: 12px; margin-top: 12px; }
+.aos-turn-actions { padding: 18px; border: 1px solid rgba(255,255,255,.07); background: var(--aos-panel); display: grid; gap: 14px; }
+.aos-turn-actions > div { display: flex; justify-content: space-between; align-items: center; }
+.aos-turn-actions span { color: var(--aos-muted); font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.aos-turn-actions strong { color: var(--aos-gold); font: 600 25px "Cinzel", serif; }
+.aos-hand-section { margin-top: 42px; }
+.aos-hand-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 18px; }
+.aos-hand-heading p { margin-bottom: 6px; }
+.aos-hand-heading h2 { margin: 0; font: 600 26px "Cinzel", serif; }
+.aos-hand-heading > span { color: var(--aos-muted); font-size: 10px; }
+.aos-card-hand { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(165px, 1fr); gap: 10px; overflow-x: auto; overscroll-behavior-inline: contain; padding: 12px 2px 28px; scrollbar-color: rgba(239,189,99,.3) transparent; }
+.aos-card-hand { scrollbar-width: none; }
+.aos-card-hand::-webkit-scrollbar { display: none; }
+
+.aos-card {
+  --element: #e9b44c;
+  position: relative;
+  min-height: 310px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--element) 27%, rgba(255,255,255,.06));
+  border-radius: 7px;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--element) 9%, #12161b), #090c10 58%),
+    #0c0f13;
+  text-align: left;
+  cursor: pointer;
+  transform-origin: bottom center;
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, opacity .22s ease;
+  box-shadow: 0 16px 35px rgba(0,0,0,.24);
+}
+.aos-card::before { content: ""; position: absolute; inset: 4px; border: 1px solid color-mix(in srgb, var(--element) 16%, transparent); border-radius: 4px; pointer-events: none; }
+.aos-card:hover:not(:disabled), .aos-card:focus-visible { z-index: 3; transform: translateY(-10px) rotate(-.4deg); border-color: color-mix(in srgb, var(--element) 68%, white 6%); box-shadow: 0 22px 48px color-mix(in srgb, var(--element) 12%, rgba(0,0,0,.42)); outline: 0; }
+.aos-card.selected { z-index: 4; transform: translateY(-16px); border-color: var(--aos-gold); box-shadow: 0 0 0 2px rgba(239,189,99,.1), 0 24px 60px color-mix(in srgb, var(--element) 19%, rgba(0,0,0,.45)); }
+.aos-card:disabled { opacity: .48; }
+.aos-card-rarity { position: relative; z-index: 1; color: color-mix(in srgb, var(--element) 70%, white); font-size: 7px; text-transform: uppercase; letter-spacing: .13em; }
+.aos-card-art { position: relative; height: 126px; display: grid; place-items: center; margin: 9px 0 12px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--element) 22%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--element) 22%, transparent), transparent 57%); }
+.aos-card-art::before, .aos-card-art::after { content: ""; position: absolute; width: 74px; aspect-ratio: 1; border: 1px solid color-mix(in srgb, var(--element) 28%, transparent); transform: rotate(45deg); animation: card-sigil 12s linear infinite; }
+.aos-card-art::after { width: 47px; animation-direction: reverse; animation-duration: 8s; }
+.aos-card-art i { position: absolute; width: 88px; height: 88px; border-radius: 50%; background: var(--element); opacity: .12; filter: blur(25px); }
+.aos-card-art b { z-index: 1; color: color-mix(in srgb, var(--element) 76%, white); font: 46px "Cinzel", serif; text-shadow: 0 0 23px color-mix(in srgb, var(--element) 50%, transparent); }
+.aos-card-element { color: var(--aos-muted); font-size: 7px; text-transform: uppercase; letter-spacing: .16em; }
+.aos-card-name { margin-top: 3px; font: 600 15px "Cinzel", serif; }
+.aos-card-value { align-self: flex-start; margin: 9px 0; padding: 4px 7px; border: 1px solid color-mix(in srgb, var(--element) 25%, transparent); color: color-mix(in srgb, var(--element) 72%, white); font-size: 8px; font-weight: 700; letter-spacing: .08em; }
+.aos-card small { margin-top: auto; color: #8f9697; font-size: 9px; line-height: 1.5; }
+.aos-ingredient-card > em {
+  position: absolute;
+  inset: auto 8px 8px;
+  z-index: 5;
+  padding: 6px;
+  border: 1px solid rgba(239,189,99,.52);
+  background: rgba(29,21,8,.92);
+  color: #ffd98b;
+  text-align: center;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.aos-ingredient-card.selected small { padding-bottom: 30px; }
+.aos-card.rarity-mythic { border-color: rgba(239,189,99,.56); background: linear-gradient(160deg, rgba(120,76,17,.28), #090c10 62%); }
+.aos-card.rarity-epic { box-shadow: inset 0 0 35px rgba(134,80,190,.07), 0 16px 35px rgba(0,0,0,.24); }
+.aos-effect { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; align-content: center; gap: 9px; pointer-events: none; background: radial-gradient(circle, color-mix(in srgb, var(--element) 16%, transparent), transparent 58%); animation: effect-fade 1.25s ease both; }
+.aos-effect > strong { z-index: 2; color: color-mix(in srgb, var(--element) 75%, white); font: 74px "Cinzel", serif; text-shadow: 0 0 35px var(--element); animation: effect-glyph 1.05s cubic-bezier(.2,.8,.2,1) both; }
+.aos-effect > span { z-index: 2; padding: 7px 11px; background: rgba(4,6,8,.78); color: #fff5dd; font: 600 12px "Cinzel", serif; }
+.aos-effect-ring { position: absolute; width: 90px; aspect-ratio: 1; border: 2px solid var(--element); border-radius: 50%; animation: effect-ring 1s ease-out both; }
+.aos-effect-particles { position: absolute; inset: 50%; }
+.aos-effect-particles i { position: absolute; width: 7px; height: 32px; border-radius: 99px; background: var(--element); box-shadow: 0 0 13px var(--element); transform-origin: 50% 150px; animation: particle-out 1.05s ease-out both; }
+.aos-effect-particles i:nth-child(2) { transform: rotate(60deg); animation-delay: .04s; }
+.aos-effect-particles i:nth-child(3) { transform: rotate(120deg); animation-delay: .08s; }
+.aos-effect-particles i:nth-child(4) { transform: rotate(180deg); animation-delay: .12s; }
+.aos-effect-particles i:nth-child(5) { transform: rotate(240deg); animation-delay: .16s; }
+.aos-effect-particles i:nth-child(6) { transform: rotate(300deg); animation-delay: .2s; }
+
+@keyframes target-pulse { 50% { border-color: color-mix(in srgb, var(--element) 86%, white); box-shadow: inset 0 0 25px color-mix(in srgb, var(--element) 7%, transparent); } }
+@keyframes rune-spin { to { transform: rotate(360deg); } }
+@keyframes card-sigil { to { transform: rotate(405deg); } }
+@keyframes effect-fade { 0% { opacity: 0; } 13%, 72% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes effect-glyph { 0% { opacity: 0; transform: scale(.25) rotate(-18deg); } 45% { opacity: 1; transform: scale(1.18) rotate(2deg); } 100% { transform: scale(1); } }
+@keyframes effect-ring { from { opacity: 1; transform: scale(.2); } to { opacity: 0; transform: scale(5); } }
+@keyframes particle-out { from { opacity: 1; translate: 0 0; } to { opacity: 0; translate: 0 -145px; } }
+
+@media (max-width: 1040px) {
+  .aos-game-nav { grid-template-columns: 1fr auto; }
+  .aos-match-meta { display: none; }
+  .aos-arena-layout { grid-template-columns: 1fr; }
+  .aos-combat-log { min-height: 190px; }
+  .aos-combat-log ol { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 18px; }
+}
+
+@media (max-width: 760px) {
+  .aos-game-shell { width: min(100% - 20px, 1440px); }
+  .aos-game-nav { gap: 12px; }
+  .aos-game-brand small { display: none; }
+  .aos-battle-header { min-height: 210px; padding-inline: 2%; }
+  .aos-turn-token { display: none; }
+  .aos-player-row { grid-template-columns: 1fr; }
+  .aos-card-hand { grid-auto-columns: minmax(170px, 62vw); }
+}
+
+@media (max-width: 500px) {
+  .aos-game-brand > span { width: 32px; }
+  .aos-game-brand strong { font-size: 12px; }
+  .aos-battle-header h1 { font-size: 37px; }
+  .aos-arena-stage { min-height: 310px; }
+  .aos-combat-log ol { grid-template-columns: 1fr; }
+  .aos-hand-heading { align-items: flex-start; flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aos-rune-ring, .aos-card-art::before, .aos-card-art::after, .aos-player-panel.targetable { animation: none; }
+  .aos-card, .aos-player-panel, .aos-meter-track i { transition: none; }
+}
+
+/* Production visual system — layered arena, tactile cards, and readable combat states. */
+.aos-game-shell {
+  --aos-ink: #07090c;
+  --aos-panel: rgba(10, 14, 19, .92);
+  --aos-border: rgba(236, 191, 104, .2);
+  --aos-gold: #f0bf69;
+  --aos-gold-bright: #ffe2a4;
+  --aos-copy: #f7f1e4;
+  --aos-muted: #8e979d;
+  width: min(1500px, calc(100% - 32px));
+  padding-bottom: 110px;
+}
+
+.aos-game-nav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-height: 82px;
+  padding: 0 16px;
+  border: 1px solid rgba(255,255,255,.055);
+  border-top: 0;
+  background: linear-gradient(90deg, rgba(7,10,14,.95), rgba(11,16,21,.88), rgba(7,10,14,.95));
+  box-shadow: 0 16px 36px rgba(0,0,0,.24);
+  backdrop-filter: blur(22px) saturate(125%);
+}
+
+.aos-game-brand { gap: 15px; }
+.aos-game-brand > span {
+  position: relative;
+  width: 42px;
+  border: 1px solid rgba(240,191,105,.8);
+  background: radial-gradient(circle at 32% 24%, rgba(255,226,164,.18), rgba(240,191,105,.025) 55%);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  transform: none;
+  box-shadow: inset 0 0 20px rgba(240,191,105,.08);
+  letter-spacing: -.06em;
+}
+.aos-game-brand strong { font-size: 15px; letter-spacing: .11em; }
+.aos-game-brand small { color: #737d83; font-size: 8px; letter-spacing: .19em; }
+
+.aos-match-meta {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border-color: rgba(255,255,255,.075);
+  background: rgba(255,255,255,.025);
+  box-shadow: inset 0 1px rgba(255,255,255,.025);
+}
+
+.aos-battle-header {
+  position: relative;
+  isolation: isolate;
+  min-height: 430px;
+  margin: 18px 0 14px;
+  padding: 62px 5%;
+  overflow: hidden;
+  border: 1px solid rgba(240,191,105,.22);
+  border-radius: 18px;
+  background-image:
+    linear-gradient(90deg, rgba(4,6,9,.94) 0%, rgba(4,6,9,.77) 35%, rgba(4,6,9,.17) 69%, rgba(4,6,9,.42) 100%),
+    linear-gradient(0deg, rgba(4,6,9,.76), transparent 56%),
+    url('/art/elemental-arena-hero.webp');
+  background-position: center, center, center 56%;
+  background-size: cover;
+  box-shadow: 0 28px 80px rgba(0,0,0,.38), inset 0 1px rgba(255,255,255,.04);
+}
+.aos-battle-header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 13% 62%, rgba(255,77,29,.18), transparent 25%),
+    radial-gradient(circle at 88% 48%, rgba(47,166,255,.16), transparent 23%),
+    linear-gradient(115deg, transparent 44%, rgba(255,255,255,.045) 50%, transparent 56%);
+}
+.aos-battle-header::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 9px;
+  border: 1px solid rgba(255,255,255,.055);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.aos-hero-copy { position: relative; z-index: 2; max-width: 800px; }
+.aos-battle-header .aos-hero-copy > p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  color: var(--aos-gold-bright);
+  font-size: 10px;
+  letter-spacing: .24em;
+}
+.aos-hero-copy > p > span {
+  width: 26px;
+  height: 1px;
+  background: var(--aos-gold);
+  box-shadow: 0 0 11px var(--aos-gold);
+}
+.aos-battle-header h1 {
+  max-width: 790px;
+  font-size: clamp(46px, 6vw, 82px);
+  line-height: .98;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+  text-shadow: 0 6px 35px rgba(0,0,0,.72);
+}
+.aos-battle-header h1 em { color: var(--aos-gold-bright); font-style: normal; }
+
+.aos-hero-rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 30px;
+}
+.aos-hero-rules > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  min-height: 36px;
+  padding: 10px 13px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 999px;
+  background: rgba(4,7,10,.56);
+  color: #9fa8aa;
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+.aos-hero-rules b { color: #fff0cd; font: 700 12px "Cinzel", serif; }
+
+.aos-turn-token {
+  position: relative;
+  z-index: 2;
+  width: 152px;
+  flex: 0 0 auto;
+  border-color: rgba(240,191,105,.38);
+  background:
+    radial-gradient(circle, rgba(240,191,105,.14), rgba(8,10,13,.58) 64%),
+    rgba(7,9,12,.38);
+  box-shadow: 0 0 0 8px rgba(7,9,12,.34), 0 0 65px rgba(240,191,105,.12), inset 0 0 28px rgba(240,191,105,.08);
+  backdrop-filter: blur(12px);
+}
+.aos-turn-token::before {
+  inset: 8px;
+  border: 1px dashed rgba(240,191,105,.22);
+  border-radius: 50%;
+  animation: rune-spin 22s linear infinite;
+}
+.aos-turn-token strong { font-size: 42px; line-height: .9; }
+.aos-turn-token small { color: #636e73; font-size: 6px; letter-spacing: .24em; }
+
+.aos-player-panel,
+.aos-combat-log,
+.aos-turn-actions,
+.aos-arena-stage {
+  border-radius: 12px;
+  box-shadow: 0 18px 45px rgba(0,0,0,.2), inset 0 1px rgba(255,255,255,.025);
+}
+.aos-arena-layout { gap: 14px; margin-top: 14px; }
+.aos-arena-stage {
+  border-color: rgba(240,191,105,.15);
+  background:
+    radial-gradient(circle at 50% 46%, rgba(240,191,105,.055), transparent 34%),
+    linear-gradient(135deg, rgba(20,28,32,.72), rgba(7,9,12,.96));
+}
+.aos-rune-ring { opacity: .82; filter: drop-shadow(0 0 24px rgba(240,191,105,.08)); }
+
+.aos-hand-section { margin-top: 58px; }
+.aos-hand-heading { padding: 0 4px 15px; border-bottom: 1px solid rgba(255,255,255,.055); }
+.aos-hand-heading h2 { max-width: 760px; font-size: clamp(21px, 2.4vw, 31px); line-height: 1.22; }
+.aos-card-hand {
+  grid-auto-columns: minmax(208px, 1fr);
+  gap: 16px;
+  padding: 24px 8px 38px;
+  scroll-snap-type: x proximity;
+}
+
+.aos-card {
+  --rarity: #9ca6ab;
+  isolation: isolate;
+  min-height: 382px;
+  padding: 14px 14px 12px;
+  border: 1px solid color-mix(in srgb, var(--rarity) 52%, rgba(255,255,255,.08));
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 50% -12%, color-mix(in srgb, var(--element) 22%, transparent), transparent 36%),
+    linear-gradient(155deg, color-mix(in srgb, var(--element) 8%, #171b20), #080a0e 56%, #0d1014);
+  box-shadow:
+    0 24px 52px rgba(0,0,0,.36),
+    inset 0 1px rgba(255,255,255,.045),
+    inset 0 0 36px color-mix(in srgb, var(--element) 5%, transparent);
+  scroll-snap-align: start;
+}
+.aos-card::before {
+  inset: 5px;
+  border-color: color-mix(in srgb, var(--rarity) 26%, transparent);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.5);
+}
+.aos-card::after {
+  content: "";
+  position: absolute;
+  z-index: 7;
+  inset: -80% -45%;
+  pointer-events: none;
+  background: linear-gradient(108deg, transparent 42%, rgba(255,255,255,.12) 48%, rgba(255,255,255,.025) 53%, transparent 59%);
+  transform: translateX(-55%) rotate(8deg);
+  transition: transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.aos-card:hover:not(:disabled), .aos-card:focus-visible {
+  transform: translateY(-13px) rotate(-.45deg) scale(1.012);
+  border-color: color-mix(in srgb, var(--rarity) 82%, white 8%);
+  box-shadow: 0 30px 68px color-mix(in srgb, var(--element) 18%, rgba(0,0,0,.55)), inset 0 1px rgba(255,255,255,.07);
+}
+.aos-card:hover:not(:disabled)::after, .aos-card:focus-visible::after { transform: translateX(54%) rotate(8deg); }
+.aos-card.selected {
+  transform: translateY(-17px) scale(1.018);
+  border-color: #ffd783;
+  box-shadow: 0 0 0 2px rgba(255,215,131,.15), 0 28px 76px color-mix(in srgb, var(--element) 25%, rgba(0,0,0,.56));
+}
+.aos-card:disabled { opacity: .38; filter: saturate(.55); }
+
+.aos-card.rarity-common { --rarity: #9aa5aa; }
+.aos-card.rarity-uncommon { --rarity: #71c990; }
+.aos-card.rarity-rare { --rarity: #63aef1; }
+.aos-card.rarity-epic { --rarity: #bd7dff; }
+.aos-card.rarity-mythic { --rarity: #ffd06d; }
+.aos-card.element-fire { --element: #ff6a3d; }
+.aos-card.element-water { --element: #4cb9ff; }
+.aos-card.element-air { --element: #cce9dd; }
+.aos-card.element-earth { --element: #ba8a50; }
+.aos-card.element-steam { --element: #a9c7d2; }
+.aos-card.element-ice { --element: #78ddff; }
+.aos-card.element-lightning { --element: #d8d16a; }
+.aos-card.element-lava { --element: #ff432f; }
+.aos-card.element-storm { --element: #7f9ee8; }
+.aos-card.element-nature { --element: #79c46b; }
+.aos-card.element-light { --element: #ffe69a; }
+.aos-card.element-metal { --element: #aeb9c6; }
+.aos-card.element-healing { --element: #68dc9a; }
+.aos-card.element-shield { --element: #55a8ff; }
+.aos-card.element-shadow { --element: #a77aff; }
+.aos-card.element-mythic { --element: #f1c462; }
+.aos-card.element-arcane { --element: #c28cff; }
+.aos-card.rarity-epic,
+.aos-card.rarity-mythic {
+  background:
+    radial-gradient(circle at 50% -12%, color-mix(in srgb, var(--rarity) 28%, transparent), transparent 38%),
+    linear-gradient(155deg, color-mix(in srgb, var(--rarity) 10%, #171b20), #080a0e 58%, #0d1014);
+}
+
+.aos-card-topline {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 22px;
+}
+.aos-card-rarity {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: color-mix(in srgb, var(--rarity) 83%, white);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .17em;
+}
+.aos-card-rarity i {
+  width: 7px;
+  height: 7px;
+  border: 1px solid color-mix(in srgb, var(--rarity) 80%, white);
+  background: color-mix(in srgb, var(--rarity) 42%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--rarity) 70%, transparent);
+  transform: rotate(45deg);
+}
+.aos-card-pull { color: #626b70; font-size: 7px; letter-spacing: .08em; text-transform: uppercase; }
+
+.aos-card-art {
+  height: 166px;
+  margin: 9px 0 15px;
+  border-color: color-mix(in srgb, var(--element) 34%, rgba(255,255,255,.07));
+  border-radius: 9px;
+  background-image:
+    linear-gradient(165deg, color-mix(in srgb, var(--element) 22%, rgba(6,8,11,.16)), rgba(4,6,9,.24)),
+    url('/art/arcane-card-sigil.webp');
+  background-position: center, center 44%;
+  background-size: cover;
+  background-blend-mode: color, luminosity;
+  box-shadow: inset 0 0 42px rgba(0,0,0,.55), 0 8px 24px rgba(0,0,0,.22);
+}
+.aos-card-art::before {
+  width: auto;
+  inset: 0;
+  border: 0;
+  background:
+    radial-gradient(circle at center, color-mix(in srgb, var(--element) 18%, transparent), transparent 38%),
+    linear-gradient(180deg, transparent 55%, rgba(4,6,9,.72));
+  transform: none;
+  animation: none;
+}
+.aos-card-art::after {
+  width: auto;
+  inset: 5px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 5px;
+  transform: none;
+  animation: none;
+}
+.aos-card-art > i {
+  z-index: 1;
+  width: 102px;
+  height: 102px;
+  opacity: .22;
+  filter: blur(30px);
+}
+.aos-card-orbit {
+  position: absolute;
+  z-index: 2;
+  width: 84px;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--element) 50%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 28px color-mix(in srgb, var(--element) 12%, transparent), inset 0 0 22px color-mix(in srgb, var(--element) 10%, transparent);
+}
+.aos-card-orbit::before,
+.aos-card-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px dashed color-mix(in srgb, var(--element) 34%, transparent);
+  border-radius: 50%;
+}
+.aos-card-orbit::after { inset: -9px 26px; border-style: solid; }
+.aos-card-art b {
+  z-index: 4;
+  font-size: 54px;
+  color: color-mix(in srgb, var(--element) 76%, white);
+  text-shadow: 0 0 12px rgba(255,255,255,.35), 0 0 35px var(--element);
+}
+.aos-card-art-label {
+  position: absolute;
+  z-index: 4;
+  bottom: 10px;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--element) 34%, transparent);
+  border-radius: 999px;
+  background: rgba(4,6,9,.68);
+  color: color-mix(in srgb, var(--element) 75%, white);
+  font-size: 6px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.aos-card-element { color: #727c81; font-size: 7px; font-weight: 700; letter-spacing: .2em; }
+.aos-card-name { margin-top: 5px; font-size: 19px; line-height: 1.08; letter-spacing: -.01em; }
+.aos-card-affinities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 11px 0 9px;
+}
+.aos-card-affinities > span {
+  padding: 4px 7px;
+  border: 1px solid color-mix(in srgb, var(--element) 26%, rgba(255,255,255,.055));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--element) 5%, rgba(255,255,255,.018));
+  color: color-mix(in srgb, var(--element) 74%, white);
+  font-size: 6px;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.aos-card small { color: #8d9698; font-size: 8px; line-height: 1.55; }
+.aos-card-footer {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-top: 11px;
+  color: #586167;
+  font: 700 6px "Cinzel", serif;
+  letter-spacing: .14em;
+}
+.aos-card-footer i { height: 1px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--rarity) 32%, transparent)); }
+.aos-card-footer i:last-child { background: linear-gradient(90deg, color-mix(in srgb, var(--rarity) 32%, transparent), transparent); }
+.aos-card-selected {
+  position: absolute;
+  z-index: 9;
+  inset: auto 9px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 32px;
+  border: 1px solid rgba(255,215,131,.68);
+  border-radius: 7px;
+  background: rgba(31,22,8,.94);
+  color: #ffe0a0;
+  box-shadow: 0 8px 26px rgba(0,0,0,.34);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.aos-card-selected b { font-size: 12px; }
+.aos-ingredient-card.selected .aos-card-footer { opacity: 0; }
+
+@media (max-width: 900px) {
+  .aos-battle-header { min-height: 390px; padding: 46px 5%; background-position: center, center, 58% center; }
+  .aos-battle-header h1 { max-width: 650px; font-size: clamp(43px, 8vw, 68px); }
+  .aos-turn-token { width: 130px; }
+}
+
+@media (max-width: 760px) {
+  .aos-game-shell { width: min(100% - 18px, 1500px); }
+  .aos-game-nav { min-height: 70px; padding: 0 10px; }
+  .aos-battle-header {
+    min-height: 500px;
+    align-items: flex-end;
+    padding: 44px 25px;
+    background-image:
+      linear-gradient(0deg, rgba(4,6,9,.98) 0%, rgba(4,6,9,.58) 58%, rgba(4,6,9,.15) 100%),
+      url('/art/elemental-arena-hero.webp');
+    background-position: center, 64% center;
+  }
+  .aos-battle-header h1 { font-size: clamp(40px, 11vw, 57px); }
+  .aos-hero-rules { margin-top: 23px; }
+  .aos-card-hand { grid-auto-columns: minmax(218px, 74vw); }
+}
+
+@media (max-width: 500px) {
+  .aos-game-brand > span { width: 36px; }
+  .aos-game-brand strong { font-size: 11px; }
+  .aos-wallet-control.primary { font-size: 9px; }
+  .aos-battle-header { min-height: 460px; margin-top: 10px; padding: 35px 20px; border-radius: 13px; }
+  .aos-battle-header .aos-hero-copy > p { font-size: 8px; letter-spacing: .17em; }
+  .aos-battle-header h1 { font-size: 39px; }
+  .aos-hero-rules > span { min-height: 31px; padding: 8px 10px; font-size: 6px; }
+  .aos-card { min-height: 390px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aos-turn-token::before { animation: none; }
+  .aos-card::after { display: none; }
+}
